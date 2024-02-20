@@ -8,7 +8,7 @@ CONFIG_FILE="./procedures.json"
 ROLE_NAMES=${ROLE_NAMES:-"Analista"}
 
 # Definindo chave da API
-OPENAI_API_KEY="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"
+OPENAI_API_KEY=""
 
 SCRIPT="./src/procedure_genai.py"
 PROMPT_FILE_PATH="./SP/foobar.sql"
