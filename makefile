@@ -13,7 +13,7 @@ build:
 
 # Rodar o container
 run:
-	docker run --rm -it -v $(PWD)/output:/app/output -e ROLE_NAMES="${ROLE_NAMES}"  $(IMAGE_NAME):$(VERSION)
+	docker run --rm -it -v $(PWD)/output:/app/output -e ROLE_NAMES="${ROLE_NAMES}"  -e OPENAI_API_KEY="${OPENAI_API_KEY}" $(IMAGE_NAME):$(VERSION)
 
 
 all: build
