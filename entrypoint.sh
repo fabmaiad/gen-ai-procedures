@@ -11,7 +11,7 @@ ROLE_NAMES=${ROLE_NAMES:-"Analista"}
 OPENAI_API_KEY=${OPENAI_API_KEY}
 
 SCRIPT="./src/procedure_genai.py"
-PROMPT_FILE_PATH="./SP/foobar.sql"
+PROMPT_FILE_PATH="./SP/"
 
 for ROLE_NAME in $ROLE_NAMES; do
     ROLE_DESCRIPTION=$(jq -r --arg ROLE_NAME "$ROLE_NAME" '.Roles[] | select(.Name==$ROLE_NAME) | .Description' $CONFIG_FILE)

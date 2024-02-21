@@ -94,30 +94,31 @@ def save_description(file_path, description, prompt_file_path):
     except Exception as e:
         sys.exit(f"Error writing to file at {file_path}: {e}")
 
-
+# Main function
+        
 def main():
     if len(sys.argv) != 7:
         print("Usage: python script.py <OpenAIKey> <System> <System_File_Path> <Prompt> <Prompt_File_Path> <Output_File_Path>")
         sys.exit(1)
 
-    api_key, system, system_file_path, prompt, prompt_file_path, output_file_path = sys.argv[
+    api_key, system, system_file_path, prompt, prompt_directory, output_file_path = sys.argv[
         1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6]
-    print(api_key, system, system_file_path, prompt, prompt_file_path, output_file_path)
+    print(api_key, system, system_file_path, prompt, prompt_directory, output_file_path)
     system_content = ""
-    prompt_content = ""
 
     if os.path.isfile(system_file_path):
         system_content = read_file(system_file_path)
 
-    if os.path.isfile(prompt_file_path):
-        prompt_content = read_file(prompt_file_path)
 
-    description = generate_description(
-        api_key, system, system_content, prompt, prompt_content)
-
-    save_description(output_file_path, description, prompt_file_path)
-
-    print(f"{output_file_path} saved.")
+    for prompt_file_name in os.listdir(prompt_directory):
+        prompt_file_path = os.path.join(prompt_directory, prompt_file_name)
+        if os.path.isfile(prompt_file_path):
+            # Lê o conteúdo do arquivo de prompt
+            prompt_content = read_file(prompt_file_path)
+        
+        description = generate_description(api_key, system, system_content, prompt, prompt_content)
+        save_description(output_file_path, description, prompt_file_path)
+        print(f"{output_file_path} saved.")
 
 
 if __name__ == "__main__":
