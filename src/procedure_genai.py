@@ -19,7 +19,7 @@ def read_file(file_path):
 def generate_description(api_key, system, system_content, prompt, prompt_content):
     try:
         chat = ChatOpenAI(
-            temperature=0, openai_api_key=api_key, model="gpt-4", verbose=True)
+            temperature=0.1, openai_api_key=api_key, model="gpt-4-turbo-preview", verbose=True)
         messages = [
             SystemMessage(
                 content=f"{system}"
