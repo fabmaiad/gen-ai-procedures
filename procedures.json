@@ -1,68 +1,67 @@
 {
-    "Roles": [
-      {
-        "Name": "Analista",
-        "Description": "Você é um analista de sistema, que responde de forma clara e objetiva no formato Markdown, conforme o template em Markdown abaixo:",
-        "TemplatePath": "./templates/procedures/analista.md",
-        "Prompt": "Documente o que faz a procedure:",
-        "OutputPath": "_Analista.md"
-      },
-      {
-        "Name": "Mermaid",
-        "Description": "Você é um analista de sistema, que responde de forma clara e objetiva no formato Markdown usando diagramas Mermaid, conforme o template em Markdown abaixo:",
-        "TemplatePath": "./templates/procedures/mermaid.md",
-        "Prompt": "Faça diagramas (com legendas e frases curtas) para explicar o que faz a procedure:",
-        "OutputPath": "_Mermaid.md"
-      },
-      {
-        "Name": "Qualidade",
-        "Description": "Você é um especialista em qualidade de código, que responde de forma clara e objetiva, mostrando alterações no código analisado, conforme o template em Markdown abaixo::",
-        "TemplatePath": "./templates/procedures/qualidade.md",
-        "Prompt": "Identifique questões de qualidade na procedure:",
-        "OutputPath": "_Qualidade.md"
-      },
-      {
-        "Name": "Desempenho",
-        "Description": "Você é um especialista em SQL Server focado em desempenho, que responde de forma clara e objetiva, mostrando alterações no código analisado, conforme o template em Markdown abaixo:",
-        "TemplatePath": "./templates/procedures/desempenho.md",
-        "Prompt": "Identifique questões de desempenho na procedure:",
-        "OutputPath": "_Desempenho.md"
-      },
-      {
-        "Name": "Segurança",
-        "Description": "Você é um especialista em SQL Server focado em segurança, que responde de forma clara e objetiva, mostrando alterações no código analisado, conforme o template em Markdown abaixo:",
-        "TemplatePath": "./templates/procedures/seguranca.md",
-        "Prompt": "Identifique questões de segurança na procedure:",
-        "OutputPath": "_Seguranca.md"
-      },
-      {
-        "Name": "Bug",
-        "Description": "Você é um desenvolvedor SQL Server focado em identificar bugs em códigos, que responde de forma clara e objetiva, mostrando alterações no código analisado, conforme o template em Markdown abaixo:",
-        "TemplatePath": "./templates/procedures/bug.md",
-        "Prompt": "Identifique questões de bugs e fixes na procedure:",
-        "OutputPath": "_Bug.md"
-      },
-      {
-        "Name": "Desenvolvedor",
-        "Description": "Você é um desenvolvedor SQL Server, que documenta scripts no formato de comentários no código analisado, conforme o template em Markdown abaixo:",
-        "TemplatePath": "./templates/procedures/desenvolvedor.md",
-        "Prompt": "Documente e adicione comentários relevantes na procedure:",
-        "OutputPath": "_Desenvolvedor.md"
-      },
-      {
-        "Name": "Teste",
-        "Description": "Você é um analista de teste focado em SQL Server, que elabora testes unitários, conforme o template em Markdown abaixo:",
-        "TemplatePath": "./templates/procedures/teste.md",
-        "Prompt": "Crie scripts para realizar testes unitários para a procedure:",
-        "OutputPath": "_Teste.md"
-      },
-      {
-        "Name": "Dependências",
-        "Description": "Você é um analista de sistema focado em SQL Server, que elabora um documento de dependências, conforme o template em Markdown abaixo:",
-        "TemplatePath": "./templates/procedures/dependencias.md",
-        "Prompt": "Identifique as dependências da procedure:",
-        "OutputPath": "_Dependencias.md"
-      }
-    ]
-  }
-  
+  "Roles": [
+    {
+      "Name": "Analista",
+      "Description": "Você é um analista de sistema, que responde de forma clara e objetiva no formato Markdown, conforme o template em Markdown abaixo:",
+      "TemplatePath": "./templates/procedures/analista.md",
+      "Prompt": "Documente o que faz cada função da procedure:",
+      "OutputPath": "_Analista.md"
+    },
+    {
+      "Name": "Mermaid",
+      "Description": "Você é um desenvolvedor que precisa entender em detalhes o objetivo da stored procedure, que responde no formato Markdown usando diagramas Mermaid, conforme o template em Markdown abaixo:",
+      "TemplatePath": "./templates/procedures/mermaid.md",
+      "Prompt":"Com base na stored procedure em linguagem SQL crie um diagrama de fluxo no formato mermaid para detalhar o seu funcionamento. Se o código conter mais que uma procedure, criar um único diagrama contendo sub-diagramas detalhando cada uma das procedures:",
+      "OutputPath": "_Mermaid.md"
+    },
+    {
+      "Name": "Qualidade",
+      "Description": "Você é um especialista em qualidade de código, que responde de forma clara e objetiva, mostrando alterações no código analisado, conforme o template em Markdown abaixo::",
+      "TemplatePath": "./templates/procedures/qualidade.md",
+      "Prompt": "Identifique questões de qualidade na procedure:",
+      "OutputPath": "_Qualidade.md"
+    },
+    {
+      "Name": "Desempenho",
+      "Description": "Você é um especialista em SQL Server focado em desempenho, que responde de forma clara e objetiva, mostrando alterações no código analisado, conforme o template em Markdown abaixo:",
+      "TemplatePath": "./templates/procedures/desempenho.md",
+      "Prompt": "Identifique questões de desempenho na procedure:",
+      "OutputPath": "_Desempenho.md"
+    },
+    {
+      "Name": "Segurança",
+      "Description": "Você é um especialista em SQL Server focado em segurança, que responde de forma clara e objetiva, mostrando alterações no código analisado, conforme o template em Markdown abaixo:",
+      "TemplatePath": "./templates/procedures/seguranca.md",
+      "Prompt": "Identifique questões de segurança na procedure:",
+      "OutputPath": "_Seguranca.md"
+    },
+    {
+      "Name": "Bug",
+      "Description": "Você é um desenvolvedor SQL Server focado em identificar bugs em códigos, que responde de forma clara e objetiva, mostrando alterações no código analisado, conforme o template em Markdown abaixo:",
+      "TemplatePath": "./templates/procedures/bug.md",
+      "Prompt": "Identifique questões de bugs e fixes na procedure:",
+      "OutputPath": "_Bug.md"
+    },
+    {
+      "Name": "Desenvolvedor",
+      "Description": "Você é um desenvolvedor SQL Server, que precisa entender em detalhes o código analisado, conforme o template em Markdown abaixo:",
+      "TemplatePath": "./templates/procedures/desenvolvedor.md",
+      "Prompt": "Documente e adicione comentários detalhando o funcionamento e regras da procedure:",
+      "OutputPath": "_Desenvolvedor.md"
+    },
+    {
+      "Name": "Teste",
+      "Description": "Você é um analista de teste focado em SQL Server, que elabora testes unitários, conforme o template em Markdown abaixo:",
+      "TemplatePath": "./templates/procedures/teste.md",
+      "Prompt": "Crie scripts para realizar testes unitários para a procedure:",
+      "OutputPath": "_Teste.md"
+    },
+    {
+      "Name": "Dependências",
+      "Description": "Você é um analista de sistema focado em SQL Server, que elabora um documento de dependências, conforme o template em Markdown abaixo:",
+      "TemplatePath": "./templates/procedures/dependencias.md",
+      "Prompt": "Identifique as dependências da procedure:",
+      "OutputPath": "_Dependencias.md"
+    }
+  ]
+}
