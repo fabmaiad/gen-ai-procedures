@@ -1,6 +1,6 @@
 import sys
 import os
-import datetime
+import chardet
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 import openai
@@ -8,8 +8,12 @@ import openai
 
 def read_file(file_path):
     try:
-        with open(file_path, 'r') as file:
-            return file.read()
+        with open(file_path, 'rb') as file:
+            data = file.read()
+        encoding = chardet.detect(data)['encoding']
+        print(f"Detected encoding: {encoding}")
+        
+        return data.decode(encoding)
     except FileNotFoundError:
         sys.exit(f"Error: File not found at {file_path}")
     except Exception as e:
@@ -19,7 +23,7 @@ def read_file(file_path):
 def generate_description(api_key, system, system_content, prompt, prompt_content):
     try:
         chat = ChatOpenAI(
-            temperature=0.1, openai_api_key=api_key, model="gpt-4-turbo-preview", verbose=True)
+            temperature=0, openai_api_key=api_key, model="gpt-4-turbo-preview", verbose=True)
         messages = [
             SystemMessage(
                 content=f"{system}"
@@ -33,7 +37,7 @@ def generate_description(api_key, system, system_content, prompt, prompt_content
         ]
 
         # Split the prompt_content into smaller chunks based on token count
-        chunk_size = 1000  # You can adjust this based on the token limit
+        chunk_size = 60000  # You can adjust this based on the token limit
         chunks = []
         current_chunk = ""
 
@@ -82,7 +86,6 @@ def generate_description(api_key, system, system_content, prompt, prompt_content
 # Save the description to a file
 
 def save_description(file_path, description, prompt_file_path):
-    #current_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     prompt_file_path = prompt_file_path.split("/")[-1].split('.')[0]
     base_path = os.path.join('output', prompt_file_path)
     os.makedirs(base_path, exist_ok=True)
