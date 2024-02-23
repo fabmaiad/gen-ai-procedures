@@ -1,17 +1,23 @@
 import sys
 import os
+import logging
 import chardet
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 import openai
 
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(name)s - [%(filename)s:%(lineno)d] - %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',)
+logger = logging.getLogger()
+
 def read_file(file_path):
     try:
         with open(file_path, 'rb') as file:
             data = file.read()
         encoding = chardet.detect(data)['encoding']
-        print(f"Detected encoding: {encoding}")
+        #print(f"Detected encoding: {encoding}")
+        logger.info(f"Detected encoding: {encoding}")
         
         return data.decode(encoding)
     except FileNotFoundError:
@@ -23,7 +29,7 @@ def read_file(file_path):
 def generate_description(api_key, system, system_content, prompt, prompt_content):
     try:
         chat = ChatOpenAI(
-            temperature=0, openai_api_key=api_key, model="gpt-4-turbo-preview", verbose=True)
+            temperature=0.1, openai_api_key=api_key, model="gpt-4-turbo-preview", verbose=True)
         messages = [
             SystemMessage(
                 content=f"{system}"
@@ -37,7 +43,7 @@ def generate_description(api_key, system, system_content, prompt, prompt_content
         ]
 
         # Split the prompt_content into smaller chunks based on token count
-        chunk_size = 60000  # You can adjust this based on the token limit
+        chunk_size = 80000  # You can adjust this based on the token limit
         chunks = []
         current_chunk = ""
 
@@ -93,7 +99,8 @@ def save_description(file_path, description, prompt_file_path):
     try:
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(description)
-        print(f"File saved successfully at {file_path}")
+        #print(f"File saved successfully at {file_path}")
+        logger.info(f"File saved successfully at {file_path}")
     except Exception as e:
         sys.exit(f"Error writing to file at {file_path}: {e}")
 
@@ -106,7 +113,14 @@ def main():
 
     api_key, system, system_file_path, prompt, prompt_directory, output_file_path = sys.argv[
         1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6]
-    print(api_key, system, system_file_path, prompt, prompt_directory, output_file_path)
+    logger.info("CONFIG:\n"
+                "API Key: %s\n"
+                "System: %s\n"
+                "System File Path: %s\n"
+                "Prompt: %s\n"
+                "Prompt Directory: %s\n"
+                "Output File Path: %s\n",
+                api_key, system, system_file_path, prompt, prompt_directory, output_file_path)
     system_content = ""
 
     if os.path.isfile(system_file_path):
@@ -118,10 +132,10 @@ def main():
         if os.path.isfile(prompt_file_path):
             # Lê o conteúdo do arquivo de prompt
             prompt_content = read_file(prompt_file_path)
-        
+        logger.info(f"Generating {output_file_path}...")
         description = generate_description(api_key, system, system_content, prompt, prompt_content)
         save_description(output_file_path, description, prompt_file_path)
-        print(f"{output_file_path} saved.")
+        
 
 
 if __name__ == "__main__":

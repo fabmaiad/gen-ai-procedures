@@ -20,6 +20,6 @@ for ROLE_NAME in $ROLE_NAMES; do
     OUTPUT_PATH=$(jq -r --arg ROLE_NAME "$ROLE_NAME" '.Roles[] | select(.Name==$ROLE_NAME) | .OutputPath' $CONFIG_FILE)
 
     # Executando o script Python para a role
-    echo "Executando o script com as configurações da role $ROLE_NAME..."
+    echo "****** Executando o script com as configurações da role $ROLE_NAME... ******"
     python3 $SCRIPT "$OPENAI_API_KEY" "$ROLE_DESCRIPTION" "$TEMPLATE_PATH" "$PROMPT" "$PROMPT_FILE_PATH" "$OUTPUT_PATH"
 done
