@@ -11,7 +11,7 @@
       "Name": "Mermaid",
       "Description": "Você é um desenvolvedor que precisa entender em detalhes o objetivo da stored procedure, que responde no formato Markdown usando diagramas Mermaid, conforme o template em Markdown abaixo:",
       "TemplatePath": "./templates/procedures/mermaid.md",
-      "Prompt":"Com base na stored procedure em linguagem SQL crie um diagrama de fluxo no formato mermaid para detalhar o seu funcionamento. Se o código conter mais que uma procedure, criar um único diagrama contendo sub-diagramas detalhando cada uma das procedures:",
+      "Prompt":"Com base na stored procedure em linguagem SQL crie um diagrama de fluxo no formato mermaid para detalhar o seu funcionamento, remova os caracteres que não são suportados pelo mermaid. Se o código conter mais que uma procedure, criar um único diagrama contendo sub-diagramas detalhando cada uma das procedures:",
       "OutputPath": "_Mermaid.md"
     },
     {

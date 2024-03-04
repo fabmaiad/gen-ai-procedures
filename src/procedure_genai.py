@@ -2,6 +2,7 @@ import sys
 import os
 import logging
 import chardet
+import re
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 import openai
@@ -18,7 +19,7 @@ def read_file(file_path):
         encoding = chardet.detect(data)['encoding']
         #print(f"Detected encoding: {encoding}")
         logger.info(f"Detected encoding: {encoding}")
-        
+
         return data.decode(encoding)
     except FileNotFoundError:
         sys.exit(f"Error: File not found at {file_path}")
@@ -26,7 +27,19 @@ def read_file(file_path):
         sys.exit(f"Error reading file at {file_path}: {e}")
 
 
-def generate_description(api_key, system, system_content, prompt, prompt_content):
+def extract_procedures(sql_text):
+    try:
+        #TODO: Ajuste esta expressão regular
+        pattern = re.compile(r'(?is)(BEGIN\s+.*?;\s*END;)')
+        procedures = pattern.findall(sql_text)
+        return procedures
+    except Exception as e:
+        sys.exit(f"Error extracting procedures from SQL: {e}")
+
+
+# Generate the description
+
+def generate_description(api_key, system, system_content, prompt, prompt_content, accumulated_content=""):
     try:
         chat = ChatOpenAI(
             temperature=0.1, openai_api_key=api_key, model="gpt-4-turbo-preview", verbose=True)
@@ -42,52 +55,25 @@ def generate_description(api_key, system, system_content, prompt, prompt_content
             )
         ]
 
-        # Split the prompt_content into smaller chunks based on token count
-        chunk_size = 80000  # You can adjust this based on the token limit
-        chunks = []
-        current_chunk = ""
+        if accumulated_content:
+            messages.append(SystemMessage(content=accumulated_content))
 
-        for token in prompt_content.split():
-            if len(current_chunk.split()) + len(token.split()) <= chunk_size:
-                current_chunk += token + " "
-            else:
-                chunks.append(current_chunk.strip())
-                current_chunk = token + " "
+        messages.append(HumanMessage(content=f"{prompt}"))
 
-        if current_chunk:
-            chunks.append(current_chunk.strip())
+        # Aqui você adiciona a nova parte
+        messages.append(HumanMessage(content=prompt_content))
 
-        # Send each chunk to the LangChain API
-        for chunk in chunks:
-            messages.append(HumanMessage(content=chunk))
-
+        # Envie a requisição para a API
         response = chat.invoke(messages)
 
-        print(response)
+        # Atualize a descrição acumulada com a nova descrição
+        new_description = response.content
+        updated_accumulated_content = accumulated_content + "\n" + new_description
 
-        return response.content
-    except openai.error.Timeout as e:
-        print(f"OpenAI API request timed out: {e}")
-        pass
-    except openai.error.APIError as e:
-        print(f"OpenAI API returned an API Error: {e}")
-        pass
-    except openai.error.APIConnectionError as e:
-        print(f"OpenAI API request failed to connect: {e}")
-        pass
-    except openai.error.InvalidRequestError as e:
-        print(f"OpenAI API request was invalid: {e}")
-        pass
-    except openai.error.AuthenticationError as e:
-        print(f"OpenAI API request was not authorized: {e}")
-        pass
-    except openai.error.PermissionError as e:
-        print(f"OpenAI API request was not permitted: {e}")
-        pass
-    except openai.error.RateLimitError as e:
-        print(f"OpenAI API request exceeded rate limit: {e}")
-        pass
-
+        # Return the description
+        return new_description, updated_accumulated_content
+    except Exception as e:
+        sys.exit(f"Error generating description: {e}")
 
 # Save the description to a file
 
@@ -99,13 +85,12 @@ def save_description(file_path, description, prompt_file_path):
     try:
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(description)
-        #print(f"File saved successfully at {file_path}")
         logger.info(f"File saved successfully at {file_path}")
     except Exception as e:
         sys.exit(f"Error writing to file at {file_path}: {e}")
 
 # Main function
-        
+
 def main():
     if len(sys.argv) != 7:
         print("Usage: python script.py <OpenAIKey> <System> <System_File_Path> <Prompt> <Prompt_File_Path> <Output_File_Path>")
@@ -121,21 +106,29 @@ def main():
                 "Prompt Directory: %s\n"
                 "Output File Path: %s\n",
                 api_key, system, system_file_path, prompt, prompt_directory, output_file_path)
-    system_content = ""
-
+    system_content   = ""
+    prompt_file_path = ""
     if os.path.isfile(system_file_path):
         system_content = read_file(system_file_path)
 
-
+    #
+    accumulated_documentation = ""
+    # Extract the procedures from the SQL
     for prompt_file_name in os.listdir(prompt_directory):
         prompt_file_path = os.path.join(prompt_directory, prompt_file_name)
-        if os.path.isfile(prompt_file_path):
-            # Lê o conteúdo do arquivo de prompt
-            prompt_content = read_file(prompt_file_path)
-        logger.info(f"Generating {output_file_path}...")
-        description = generate_description(api_key, system, system_content, prompt, prompt_content)
-        save_description(output_file_path, description, prompt_file_path)
-        
+
+        prompt_content = read_file(prompt_file_path)
+        procedures = extract_procedures(prompt_content)
+        for i, procedure_content in enumerate(procedures):
+            # Generate the description
+            logger.info(f"Generating documentation for procedure {i+1}...")
+            #
+            new_description, accumulated_documentation = generate_description(
+                api_key, system, system_content, prompt, procedure_content, accumulated_documentation)
+    # Save the description to a file
+    if accumulated_documentation:
+        save_description(output_file_path, accumulated_documentation, prompt_file_path)
+
 
 
 if __name__ == "__main__":
