@@ -10,7 +10,7 @@ ROLE_NAMES=${ROLE_NAMES:-"Analista"}
 # Definindo chave da API
 OPENAI_API_KEY=${OPENAI_API_KEY}
 
-SCRIPT="./src/procedure_genai.py"
+SCRIPT="./src/main.py"
 PROMPT_FILE_PATH="./SP/"
 
 for ROLE_NAME in $ROLE_NAMES; do
